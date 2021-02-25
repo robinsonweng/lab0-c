@@ -42,6 +42,9 @@ bool q_insert_head(queue_t *q, char *s)
     newh = malloc(sizeof(list_ele_t));
     /* Don't forget to allocate space for the string and copy it */
     /* What if either call to malloc returns NULL? */
+    int slen = strlen(s);
+    newh->value = (char *) malloc(sizeof(char) * slen);
+    strncpy(newh->value, s, sizeof(char) * slen);
     newh->next = q->head;
     q->head = newh;
     return true;
