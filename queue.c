@@ -24,6 +24,12 @@ void q_free(queue_t *q)
     /* TODO: How about freeing the list elements and the strings? */
     /* Walk through and free linked list & char */
     /* Free should use on things that allocate by malloc */
+    while (q->head) {
+        free(q->head->value);
+        list_ele_t *temp_list = q->head;
+        q->head = q->head->next;
+        free(temp_list);
+    }
     /* Free queue structure */
     free(q);
 }
