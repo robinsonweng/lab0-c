@@ -49,7 +49,7 @@ bool q_insert_head(queue_t *q, char *s)
     /* Don't forget to allocate space for the string and copy it */
     /* What if either call to malloc returns NULL? */
     int slen = strlen(s);
-    newh->value = (char *) malloc(sizeof(char) * slen);
+    newh->value = (char *) malloc(sizeof(char) * slen + 1);
     if (!newh->value) {
         free(newh);
         return NULL;
