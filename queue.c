@@ -86,8 +86,8 @@ bool q_insert_tail(queue_t *q, char *s)
         return false;
     }
     strncpy(newt->value, s, sizeof(char) * slen + 1);
-    /* The head of linked list always NULL */
     if (!q->tail) {
+        q->head = newt;
         q->tail = newt;
         return true;
     }
