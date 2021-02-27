@@ -33,6 +33,7 @@ void q_free(queue_t *q)
         q->head = q->head->next;
         free(temp_list);
     }
+    q->size = 0;
     /* Free queue structure */
     free(q);
 }
