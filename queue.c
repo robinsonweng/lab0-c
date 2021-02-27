@@ -79,7 +79,7 @@ bool q_insert_head(queue_t *q, char *s)
  */
 bool q_insert_tail(queue_t *q, char *s)
 {
-    if (!q)
+    if (!q || *s == '\0')
         return false;
     list_ele_t *newt = malloc(sizeof(list_ele_t));
     if (!newt)
@@ -94,6 +94,7 @@ bool q_insert_tail(queue_t *q, char *s)
     if (!q->tail) {
         q->head = newt;
         q->tail = newt;
+        q->size++;
         return true;
     }
     q->tail->next = newt;
