@@ -154,6 +154,7 @@ void q_reverse(queue_t *q)
         previous = current;
         current = comming;
     }
+    q->tail = q->head;
     q->head = previous;
 }
 
