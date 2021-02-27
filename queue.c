@@ -23,6 +23,8 @@ queue_t *q_new()
 /* Free all storage used by queue */
 void q_free(queue_t *q)
 {
+    if (!q)
+        return;
     /* Walk through and free linked list & char */
     /* Free should use on things that allocate by malloc */
     while (q->head) {
