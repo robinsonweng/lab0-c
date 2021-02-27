@@ -146,14 +146,15 @@ void q_reverse(queue_t *q)
 {
     if (!q || (q->size <= 1) || !q->head)
         return;
-    list_ele_t *previous, *current, *coming;
-    previous = NULL, current = q->head, coming = q->head->next;
+    list_ele_t *previous, *current, *comming;
+    previous = NULL, current = q->head, comming = q->head;
     while (current) {
+        comming = comming->next;
         current->next = previous;
         previous = current;
-        current = coming;
-        coming = coming->next;
+        current = comming;
     }
+    q->head = previous;
 }
 
 /*
