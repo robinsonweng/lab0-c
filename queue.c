@@ -164,9 +164,47 @@ void q_reverse(queue_t *q)
  * Sort elements of queue in ascending order
  * No effect if q is NULL or empty. In addition, if q has only one
  * element, do nothing.
+ * some perfomance improvement could be done here
  */
+list_ele_t *merge_sort(list_ele_t *head)
+{
+    /* divide and conquer */
+    if (!head || !head->next)
+        return head;
+    list_ele_t *left = head;
+    list_ele_t *right = head->next;
+    left->next = NULL;
+
+    left = merge_sort(left);
+    right = merge_sort(right);
+
+    /* sort the node and link them together */
+    list_ele_t *temp = NULL;
+    while (left || right) {
+        if (!left || (right && (strcmp(right->value, left->value) < 0))) {
+            if (!temp) {
+                head = temp = right;
+            } else {
+                temp->next = right;
+                temp = temp->next;
+            }
+            right = right->next;
+        } else {
+            if (!temp) {
+                head = temp = left;
+            } else {
+                temp->next = left;
+                temp = temp->next;
+            }
+            left = left->next;
+        }
+    }
+    return head;
+}
+
 void q_sort(queue_t *q)
 {
-    /* TODO: You need to write the code for this function */
-    /* TODO: Remove the above comment when you are about to implement. */
+    if (!q || q->size < 2)
+        return;
+    q->head = merge_sort(q->head);
 }
