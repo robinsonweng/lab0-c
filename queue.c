@@ -166,7 +166,7 @@ void q_reverse(queue_t *q)
  * element, do nothing.
  * some perfomance improvement could be done here
  */
-list_ele_t *merge_sort(list_ele_t *head)
+list_ele_t *merge_sort(list_ele_t *head, queue_t *q)
 {
     /* divide and conquer */
     if (!head || !head->next)
@@ -175,8 +175,8 @@ list_ele_t *merge_sort(list_ele_t *head)
     list_ele_t *right = head->next;
     left->next = NULL;
 
-    left = merge_sort(left);
-    right = merge_sort(right);
+    left = merge_sort(left, q);
+    right = merge_sort(right, q);
 
     /* sort the node and link them together */
     list_ele_t *temp = NULL;
@@ -186,7 +186,7 @@ list_ele_t *merge_sort(list_ele_t *head)
                 head = temp = right;
             } else {
                 temp->next = right;
-                temp = temp->next;
+                q->tail = temp = temp->next;
             }
             right = right->next;
         } else {
@@ -194,7 +194,7 @@ list_ele_t *merge_sort(list_ele_t *head)
                 head = temp = left;
             } else {
                 temp->next = left;
-                temp = temp->next;
+                q->tail = temp = temp->next;
             }
             left = left->next;
         }
@@ -206,5 +206,5 @@ void q_sort(queue_t *q)
 {
     if (!q || q->size < 2)
         return;
-    q->head = merge_sort(q->head);
+    q->head = merge_sort(q->head, q);
 }
