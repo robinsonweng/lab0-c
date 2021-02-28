@@ -8,3 +8,4 @@ core*
 .cmd_history
 note
 *.swp
+massif.out*
