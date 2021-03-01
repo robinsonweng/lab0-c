@@ -164,43 +164,9 @@ void q_reverse(queue_t *q)
  * Sort elements of queue in ascending order
  * No effect if q is NULL or empty. In addition, if q has only one
  * element, do nothing.
- * some perfomance improvement could be done here
+ * iterative merge sort
+ * refer to: https://www.geeksforgeeks.org/iterative-merge-sort-for-linked-list/
  */
-list_ele_t *merge_sort(list_ele_t *head, queue_t *q)
-{
-    /* divide and conquer */
-    if (!head || !head->next)
-        return head;
-    list_ele_t *left = head;
-    list_ele_t *right = head->next;
-    left->next = NULL;
-
-    left = merge_sort(left, q);
-    right = merge_sort(right, q);
-
-    /* sort the node and link them together */
-    list_ele_t *temp = NULL;
-    while (left || right) {
-        if (!left || (right && (strcmp(right->value, left->value) < 0))) {
-            if (!temp) {
-                head = temp = right;
-            } else {
-                temp->next = right;
-                q->tail = temp = temp->next;
-            }
-            right = right->next;
-        } else {
-            if (!temp) {
-                head = temp = left;
-            } else {
-                temp->next = left;
-                q->tail = temp = temp->next;
-            }
-            left = left->next;
-        }
-    }
-    return head;
-}
 
 void merge(list_ele_t **head1,
            list_ele_t **tail1,
