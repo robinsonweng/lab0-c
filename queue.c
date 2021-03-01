@@ -205,7 +205,7 @@ void merge(list_ele_t **head1,
         *tail2 = *tail1;
 }
 
-void iter_merge_sort(list_ele_t **head, int size)
+void iter_merge_sort(list_ele_t **head, list_ele_t **tail, int size)
 {
     if (*head == NULL)
         return;
@@ -248,11 +248,12 @@ void iter_merge_sort(list_ele_t **head, int size)
         }
         prevend->next = head1;
     }
+    *tail = prevend;
 }
 
 void q_sort(queue_t *q)
 {
     if (!q || q->size < 2)
         return;
-    iter_merge_sort(&(q->head), q->size);
+    iter_merge_sort(&(q->head), &(q->tail), q->size);
 }
