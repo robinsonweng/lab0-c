@@ -344,16 +344,18 @@ static bool do_remove_head(int argc, char *argv[])
         return false;
     }
 
+    removes[0] = '\0';
+    memset(removes + 1, 'X', string_length + STRINGPAD - 1);
+    removes[string_length + STRINGPAD] = '\0';
     bool check = argc > 1;
     bool ok = true;
     if (check) {
         strncpy(checks, argv[1], string_length + 1);
         checks[string_length] = '\0';
+        int alen = strlen(argv[1]);
+        strncpy(removes, argv[1], alen);
+        removes[alen] = '\0';
     }
-
-    removes[0] = '\0';
-    memset(removes + 1, 'X', string_length + STRINGPAD - 1);
-    removes[string_length + STRINGPAD] = '\0';
 
     if (!q)
         report(3, "Warning: Calling remove head on null queue");
