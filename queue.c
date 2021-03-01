@@ -202,9 +202,89 @@ list_ele_t *merge_sort(list_ele_t *head, queue_t *q)
     return head;
 }
 
+void merge(list_ele_t **head1,
+           list_ele_t **tail1,
+           list_ele_t **head2,
+           list_ele_t **tail2)
+{
+    list_ele_t *temp = NULL;
+    if (strcmp((*head1)->value, (*head2)->value) > 0) {
+        temp = *head1;
+        *head1 = *head2;
+        *head2 = temp;
+
+        temp = *tail1;
+        *tail1 = *tail2;
+        *tail2 = temp;
+    }
+
+    list_ele_t *ahead = *head1, *atail = *tail1;
+    list_ele_t *bhead = *head2, *btail = *tail2;
+    list_ele_t *btailnext = btail->next;
+
+    while (ahead != atail && bhead != btailnext) {
+        if (strcmp(ahead->next->value, bhead->value) > 0) {
+            temp = bhead->next;
+            bhead->next = ahead->next;
+            ahead->next = bhead;
+            bhead = temp;
+        }
+        ahead = ahead->next;
+    }
+    if (ahead == atail)
+        ahead->next = bhead;
+    else
+        *tail2 = *tail1;
+}
+
+void iter_merge_sort(list_ele_t **head, int size)
+{
+    if (*head == NULL)
+        return;
+    list_ele_t *head1 = NULL, *tail1 = NULL;
+    list_ele_t *head2 = NULL, *tail2 = NULL;
+    list_ele_t *prevend = NULL;
+
+    for (int gap = 1; gap < size; gap = gap * 2) {
+        head1 = *head;
+        while (head1) {
+            bool first_iter = false;
+            if (head1 == *head)
+                first_iter = true;
+
+            int counter = gap;
+            tail1 = head1;
+            while (--counter && tail1->next) {
+                tail1 = tail1->next;
+            }
+
+            head2 = tail1->next;
+            if (!head2) {
+                break;
+            }
+            counter = gap;
+            tail2 = head2;
+            while (--counter && tail2->next)
+                tail2 = tail2->next;
+
+            list_ele_t *temp = tail2->next;
+
+            merge(&head1, &tail1, &head2, &tail2);
+
+            if (first_iter)
+                *head = head1;
+            else
+                prevend->next = head1;
+            prevend = tail2;
+            head1 = temp;
+        }
+        prevend->next = head1;
+    }
+}
+
 void q_sort(queue_t *q)
 {
     if (!q || q->size < 2)
         return;
-    q->head = merge_sort(q->head, q);
+    iter_merge_sort(&(q->head), q->size);
 }
