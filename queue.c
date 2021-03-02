@@ -94,6 +94,7 @@ bool q_insert_tail(queue_t *q, char *s)
     if (!q->tail) {
         q->head = newt;
         q->tail = newt;
+        q->head->next = NULL;
         q->size++;
         return true;
     }
