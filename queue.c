@@ -28,9 +28,9 @@ void q_free(queue_t *q)
     /* Walk through and free linked list & char */
     /* Free should use on things that allocate by malloc */
     while (q->head) {
-        free(q->head->value);
         list_ele_t *temp_list = q->head;
         q->head = q->head->next;
+        free(temp_list->value);
         free(temp_list);
     }
     q->size = 0;
