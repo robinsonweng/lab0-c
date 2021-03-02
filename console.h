@@ -33,6 +33,7 @@ struct PELE {
     char *name;
     int *valp;
     char *documentation;
+    bool *switches;
     /* Function that gets called whenever parameter changes */
     setter_function setter;
     param_ptr next;
@@ -48,6 +49,7 @@ void add_cmd(char *name, cmd_function operation, char *documentation);
 void add_param(char *name,
                int *valp,
                char *doccumentation,
+               bool *switches,
                setter_function setter);
 
 /* Extract integer from text and store at loc */

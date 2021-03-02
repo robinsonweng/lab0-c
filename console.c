@@ -101,11 +101,11 @@ void init_cmd()
     add_cmd("log", do_log_cmd, " file           | Copy output to file");
     add_cmd("time", do_time_cmd, " cmd arg ...    | Time command execution");
     add_cmd("#", do_comment_cmd, " ...            | Display comment");
-    add_param("simulation", (int *) &simulation, "Start/Stop simulation mode",
+    add_param("simulation", NULL, "Start/Stop simulation mode", &simulation,
               NULL);
-    add_param("verbose", &verblevel, "Verbosity level", NULL);
-    add_param("error", &err_limit, "Number of errors until exit", NULL);
-    add_param("echo", (int *) &echo, "Do/don't echo commands", NULL);
+    add_param("verbose", &verblevel, "Verbosity level", NULL, NULL);
+    add_param("error", &err_limit, "Number of errors until exit", NULL, NULL);
+    add_param("echo", NULL, "Do/don't echo commands", &echo, NULL);
 
     init_in();
     init_time(&last_time);
@@ -134,6 +134,7 @@ void add_cmd(char *name, cmd_function operation, char *documentation)
 void add_param(char *name,
                int *valp,
                char *documentation,
+               bool *switches,
                setter_function setter)
 {
     param_ptr next_param = param_list;
@@ -147,6 +148,7 @@ void add_param(char *name,
     ele->name = name;
     ele->valp = valp;
     ele->documentation = documentation;
+    ele->switches = switches;
     ele->setter = setter;
     ele->next = next_param;
     *last_loc = ele;
@@ -304,7 +306,8 @@ static bool do_help_cmd(int argc, char *argv[])
     param_ptr plist = param_list;
     report(1, "Options:");
     while (plist) {
-        report(1, "\t%s\t%d\t%s", plist->name, *plist->valp,
+        report(1, "\t%s\t%d\t%s", plist->name,
+               plist->valp ? *plist->valp : *plist->switches,
                plist->documentation);
         plist = plist->next;
     }
@@ -343,7 +346,8 @@ static bool do_option_cmd(int argc, char *argv[])
         param_ptr plist = param_list;
         report(1, "Options:");
         while (plist) {
-            report(1, "\t%s\t%d\t%s", plist->name, *plist->valp,
+            report(1, "\t%s\t%d\t%s", plist->name,
+                   plist->valp ? *plist->valp : *plist->switches,
                    plist->documentation);
             plist = plist->next;
         }
@@ -366,10 +370,13 @@ static bool do_option_cmd(int argc, char *argv[])
         param_ptr plist = param_list;
         while (!found && plist) {
             if (strcmp(plist->name, name) == 0) {
-                int oldval = *plist->valp;
-                *plist->valp = value;
-                if (plist->setter)
-                    plist->setter(oldval);
+                if (plist->valp) {
+                    // int oldval = *plist->valp;
+                    *plist->valp = value;
+                } else {
+                    // bool oldval = *plist->switches;
+                    *plist->switches = value;
+                }
                 found = true;
             } else
                 plist = plist->next;
