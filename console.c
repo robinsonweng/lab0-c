@@ -370,13 +370,16 @@ static bool do_option_cmd(int argc, char *argv[])
         param_ptr plist = param_list;
         while (!found && plist) {
             if (strcmp(plist->name, name) == 0) {
+                int oldval;
                 if (plist->valp) {
-                    // int oldval = *plist->valp;
+                    oldval = *plist->valp;
                     *plist->valp = value;
                 } else {
-                    // bool oldval = *plist->switches;
+                    oldval = (int) *plist->switches;
                     *plist->switches = value;
                 }
+                if (plist->setter)
+                    plist->setter(oldval);
                 found = true;
             } else
                 plist = plist->next;
